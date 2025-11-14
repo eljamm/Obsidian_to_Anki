@@ -23,12 +23,12 @@ let
       # Custom library. Contains helper functions, builders, ...
       devLib = callPackage ./nix/lib.nix { };
 
-      format = callPackage ./nix/formatter.nix { };
+      formatter = callPackage ./nix/formatter.nix { };
       # devPkgs = lib.filterAttrs (n: v: lib.isDerivation v) (callPackage ./nix/packages.nix { });
       devPkgs = { };
       devShells.default = pkgs.mkShellNoCC {
         packages = with pkgs; [
-          format.formatter
+          self'.formatter.package
           nodejs
           anki
           (python3.withPackages (
