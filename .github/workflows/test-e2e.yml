@@ -1,21 +1,17 @@
 name: Test e2e
-
 env:
   PLUGIN_NAME: obsidian-to-anki-plugin
   NODE_V: '18.x'
-
 on:
   # push:
   #   branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [master]
   repository_dispatch:
     types: [ok-to-test-command]
-
 permissions:
   checks: write
   pull-requests: write
-
 jobs:
   checkout-trusted:
     runs-on: ubuntu-latest
@@ -27,17 +23,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_V }}
-      - run: |
-          npm install obsidian 
-          npm ci
+      - run: "npm install obsidian \nnpm ci\n"
       - run: npm run build --if-present
-      
       - name: Run Tests
-        run: | 
+        run: |
           # npm run test
           sudo npm run test-wdio
           sudo npm run test-py
-      
       - name: Set output perms
         if: always()
         run: |
@@ -48,27 +40,23 @@ jobs:
           ls -alh
           ls -alh tests/test_config/
           ls -alh "tests/test_config/.local/share/Anki2/User 1/"
-
       - name: Package
         if: always()
         run: |
           mkdir ${{ env.PLUGIN_NAME }}
           cp main.js manifest.json styles.css README.md ${{ env.PLUGIN_NAME }}
           zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
-
       - name: Publish Test Results in Comment
         uses: EnricoMi/publish-unit-test-result-action@v2
         # if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && always()
         if: always()
-
         with:
           report_individual_runs: true
           report_suite_logs: 'any'
-          deduplicate_classes_by_file_name: true          
+          deduplicate_classes_by_file_name: true
           comment_title: '🛠 Test Results'
           files: |
             logs/test-reports/**/*.xml
-
       # - name: Publish Test Results
       #   uses: dorny/test-reporter@v1
       #   if: success() || failure()
@@ -81,7 +69,6 @@ jobs:
           node-version: 16
       - uses: iterative/setup-cml@v1
         if: always()
-      
       - name: Publish Screenshots - Find Comment
         if: always()
         uses: peter-evans/find-comment@v3
@@ -91,7 +78,6 @@ jobs:
           body-includes: '# 📷 Screenshots of tests:'
           direction: last
           comment-author: 'github-actions[bot]'
-      
       - name: Publish Screenshots - build comment
         if: always()
         env:
@@ -99,78 +85,7 @@ jobs:
           EVENT: ${{ github.event_name }}
           REF: ${{ github.ref }}
         shell: bash
-        run: |
-          echo "# 📷 Screenshots of tests:" >> comment.md
-          echo "" >> comment.md
-
-          for ss_test in logs/**/; do 
-            ss_test_desc=$(basename "$ss_test" .png)
-            
-            if [ "$ss_test_desc" == "test-reports" ]; then
-              continue
-            fi
-
-            echo "" >> comment.md
-            echo "### 🔧 $ss_test_desc" >> comment.md
-            echo "$ss_test - $ss_test_desc"
-            echo "" >> comment.md
-
-            # echo '<details><summary>Pre Test</summary>' >> comment.md
-            echo '#### Pre Test' >> comment.md
-
-            for ss in "$ss_test"*Pre*.png; do 
-              echo '<p float="left">' >> comment.md
-              echo "  $ss"
-              cml-publish "$ss" | sed -E 's/.+/<img width="90%" src="\0"\/>/' >> comment.md
-              echo '</p>' >> comment.md
-            done 
-            
-            echo "" >> comment.md
-            # echo '</details><details><summary>Post Test</summary>' >> comment.md
-            echo '#### Post Test' >> comment.md
-
-            for ss in "$ss_test"*Post*.png; do 
-              echo '<p float="left">' >> comment.md
-              echo "  $ss"
-              cml-publish "$ss" | sed -E 's/.+/<img width="90%" src="\0"\/>/' >> comment.md
-              echo '</p>' >> comment.md
-            done 
-
-            # echo '</details>' >> comment.md
-            echo "" >> comment.md
-          done
-
-          # for ss_test in tests/test_config/*.png logs/*.png; do 
-          #   ss_test_desc=$(basename "$ss_test" .png)
-
-          #   # echo "<details><summary>$ss_test_desc</summary>" >> comment.md
-          #   # echo '<p float="left">' >> comment.md
-          #   # cml-publish "$ss_test" | sed -E 's/.+/<img width="90%" src="\0"\/>/' >> comment.md
-          #   # # echo "![](./$ss_test)" >> comment.md
-          #   # echo '</p></details>' >> comment.md
-
-          #   echo "" >> comment.md
-          #   echo "### $ss_test_desc" >> comment.md
-          #   echo "" >> comment.md
-          #   echo '<p float="left">' >> comment.md
-          #   cml-publish "$ss_test" | sed -E 's/.+/<img width="90%" src="\0"\/>/' >> comment.md
-          #   # echo "![](./$ss_test)" >> comment.md
-          #   echo '</p>' >> comment.md
-          # done
-
-          if [ "$EVENT" == 'pull_request' ]
-          then
-            sha=${{ github.event.pull_request.head.sha}}
-          elif [ "$EVENT" == 'workflow_run' ]
-          then
-            sha=${{ github.event.workflow_run.head_sha}}
-          else
-            sha=$GITHUB_SHA
-          fi
-
-          echo "" >> comment.md
-          echo "###### For commit $sha" >> comment.md
-      
+        run: "echo \"# 📷 Screenshots of tests:\" >> comment.md\necho \"\" >> comment.md\n\nfor ss_test in logs/**/; do \n  ss_test_desc=$(basename \"$ss_test\" .png)\n  \n  if [ \"$ss_test_desc\" == \"test-reports\" ]; then\n    continue\n  fi\n\n  echo \"\" >> comment.md\n  echo \"### 🔧 $ss_test_desc\" >> comment.md\n  echo \"$ss_test - $ss_test_desc\"\n  echo \"\" >> comment.md\n\n  # echo '<details><summary>Pre Test</summary>' >> comment.md\n  echo '#### Pre Test' >> comment.md\n\n  for ss in \"$ss_test\"*Pre*.png; do \n    echo '<p float=\"left\">' >> comment.md\n    echo \"  $ss\"\n    cml-publish \"$ss\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n    echo '</p>' >> comment.md\n  done \n  \n  echo \"\" >> comment.md\n  # echo '</details><details><summary>Post Test</summary>' >> comment.md\n  echo '#### Post Test' >> comment.md\n\n  for ss in \"$ss_test\"*Post*.png; do \n    echo '<p float=\"left\">' >> comment.md\n    echo \"  $ss\"\n    cml-publish \"$ss\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n    echo '</p>' >> comment.md\n  done \n\n  # echo '</details>' >> comment.md\n  echo \"\" >> comment.md\ndone\n\n# for ss_test in tests/test_config/*.png logs/*.png; do \n#   ss_test_desc=$(basename \"$ss_test\" .png)\n\n#   # echo \"<details><summary>$ss_test_desc</summary>\" >> comment.md\n#   # echo '<p float=\"left\">' >> comment.md\n#   # cml-publish \"$ss_test\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n#   # # echo \"![](./$ss_test)\" >> comment.md\n#   # echo '</p></details>' >> comment.md\n\n#   echo \"\" >> comment.md\n#   echo \"### $ss_test_desc\" >> comment.md\n#   echo \"\" >> comment.md\n#   echo '<p float=\"left\">' >> comment.md\n#   cml-publish \"$ss_test\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n#   # echo \"![](./$ss_test)\" >> comment.md\n#   echo '</p>' >> comment.md\n# done\n\nif [ \"$EVENT\" == 'pull_request' ]\nthen\n  sha=${{ github.event.pull_request.head.sha}}\nelif [ \"$EVENT\" == 'workflow_run' ]\nthen\n  sha=${{ github.event.workflow_run.head_sha}}\nelse\n  sha=$GITHUB_SHA\nfi\n\necho \"\" >> comment.md\necho \"###### For commit $sha\" >> comment.md\n"
       - name: Publish Screehnshots - Update or Create Comment
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && always()
         uses: peter-evans/create-or-update-comment@v4
@@ -179,7 +94,6 @@ jobs:
           body-file: comment.md
           edit-mode: replace
           issue-number: ${{ github.event.number }}
-
       - name: Upload build artifacts
         if: always()
         uses: actions/upload-artifact@v3
@@ -191,7 +105,6 @@ jobs:
             tests/test_config/logs/*
             tests/test_config/*.png
             # tests/test_config/.xsession-errors
-
       - name: Upload build artifacts for failed builds
         if: failure()
         uses: actions/upload-artifact@v3
@@ -200,7 +113,6 @@ jobs:
           path: |
             tests/test_config
             tests/test_vault
-
   checkout-signed:
     runs-on: ubuntu-latest
     permissions:
@@ -219,36 +131,31 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: 'refs/pull/${{ github.event.client_payload.pull_request.number }}/merge'
-
-  # Test:
-  #   if: always()
-  #   needs: [checkout-trusted, checkout-signed]
-  #   runs-on: ubuntu-latest
-
-  #   strategy:
-  #     matrix:
-  #       node-version: [18.x]
-
-  # steps:
+          # Test:
+          #   if: always()
+          #   needs: [checkout-trusted, checkout-signed]
+          #   runs-on: ubuntu-latest
       # - name: Trusted Checkout
       #   if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
       #   uses: actions/checkout@v4
       - name: Use Node.js ${{ env.NODE_V }}
+        #   strategy:
+        #     matrix:
+        #       node-version: [18.x]
+
+        # steps:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_V }}
-      - run: |
-          npm install obsidian 
-          npm ci
+      - run: "npm install obsidian \nnpm ci\n"
       - run: npm run build --if-present
-      # - run: npm test
-      
       - name: Run Tests
-        run: | 
+        # - run: npm test
+
+        run: |
           # npm run test
           sudo npm run test-wdio
           sudo npm run test-py
-      
       - name: Set output perms
         if: always()
         run: |
@@ -259,14 +166,12 @@ jobs:
           ls -alh
           ls -alh tests/test_config/
           ls -alh "tests/test_config/.local/share/Anki2/User 1/"
-
       - name: Package
         if: always()
         run: |
           mkdir ${{ env.PLUGIN_NAME }}
           cp main.js manifest.json styles.css README.md ${{ env.PLUGIN_NAME }}
           zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
-
       - name: Publish Test Results in Comment
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
@@ -278,7 +183,6 @@ jobs:
           commit: ${{ github.event.client_payload.pull_request.head.sha }}
           files: |
             logs/test-reports/**/*.xml
-
       # - name: Publish Test Results
       #   uses: dorny/test-reporter@v1
       #   if: success() || failure()
@@ -286,10 +190,8 @@ jobs:
       #     name: JUnit Reprot
       #     path: logs/test-reports/wdio.xml
       #     reporter: jest-junit
-      
       - uses: iterative/setup-cml@v1
         if: always()
-      
       - name: Publish Screenshots - Find Comment
         if: always()
         uses: peter-evans/find-comment@v3
@@ -299,7 +201,6 @@ jobs:
           body-includes: '# 📷 Screenshots of tests:'
           direction: last
           comment-author: 'github-actions[bot]'
-      
       - name: Publish Screenshots - build comment
         if: always()
         env:
@@ -307,71 +208,7 @@ jobs:
           EVENT: ${{ github.event_name }}
           REF: ${{ github.ref }}
         shell: bash
-        run: |
-          echo "# 📷 Screenshots of tests:" >> comment.md
-          echo "" >> comment.md
-
-          for ss_test in logs/**/; do 
-            ss_test_desc=$(basename "$ss_test" .png)
-            
-            if [ "$ss_test_desc" == "test-reports" ]; then
-              continue
-            fi
-
-            echo "" >> comment.md
-            echo "### 🔧 $ss_test_desc" >> comment.md
-            echo "" >> comment.md
-
-            echo '<details><summary>Pre Test</summary>' >> comment.md
-
-            for ss in "$ss_test"*Pre*.png; do 
-              echo '<p float="left">' >> comment.md
-              cml-publish "$ss" | sed -E 's/.+/<img width="90%" src="\0"\/>/' >> comment.md
-              echo '</p>' >> comment.md
-            done 
-            
-            echo '</details><details><summary>Post Test</summary>' >> comment.md
-
-            for ss in "$ss_test"*Post*.png; do 
-              echo '<p float="left">' >> comment.md
-              cml-publish "$ss" | sed -E 's/.+/<img width="90%" src="\0"\/>/' >> comment.md
-              echo '</p>' >> comment.md
-            done 
-
-            echo '</details>' >> comment.md
-          done
-
-          # for ss_test in tests/test_config/*.png logs/*.png; do 
-          #   ss_test_desc=$(basename "$ss_test" .png)
-
-          #   # echo "<details><summary>$ss_test_desc</summary>" >> comment.md
-          #   # echo '<p float="left">' >> comment.md
-          #   # cml-publish "$ss_test" | sed -E 's/.+/<img width="90%" src="\0"\/>/' >> comment.md
-          #   # # echo "![](./$ss_test)" >> comment.md
-          #   # echo '</p></details>' >> comment.md
-
-          #   echo "" >> comment.md
-          #   echo "### $ss_test_desc" >> comment.md
-          #   echo "" >> comment.md
-          #   echo '<p float="left">' >> comment.md
-          #   cml-publish "$ss_test" | sed -E 's/.+/<img width="90%" src="\0"\/>/' >> comment.md
-          #   # echo "![](./$ss_test)" >> comment.md
-          #   echo '</p>' >> comment.md
-          # done
-
-          # if [ "$EVENT" == 'pull_request' ]
-          # then
-          sha=${{ github.event.client_payload.pull_request.head.sha }}
-          # elif [ "$EVENT" == 'workflow_run' ]
-          # then
-          #   sha=${{ github.event.workflow_run.head_sha}}
-          # else
-          #   sha=$GITHUB_SHA
-          # fi
-
-          echo "" >> comment.md
-          echo "###### For commit $sha" >> comment.md
-      
+        run: "echo \"# 📷 Screenshots of tests:\" >> comment.md\necho \"\" >> comment.md\n\nfor ss_test in logs/**/; do \n  ss_test_desc=$(basename \"$ss_test\" .png)\n  \n  if [ \"$ss_test_desc\" == \"test-reports\" ]; then\n    continue\n  fi\n\n  echo \"\" >> comment.md\n  echo \"### 🔧 $ss_test_desc\" >> comment.md\n  echo \"\" >> comment.md\n\n  echo '<details><summary>Pre Test</summary>' >> comment.md\n\n  for ss in \"$ss_test\"*Pre*.png; do \n    echo '<p float=\"left\">' >> comment.md\n    cml-publish \"$ss\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n    echo '</p>' >> comment.md\n  done \n  \n  echo '</details><details><summary>Post Test</summary>' >> comment.md\n\n  for ss in \"$ss_test\"*Post*.png; do \n    echo '<p float=\"left\">' >> comment.md\n    cml-publish \"$ss\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n    echo '</p>' >> comment.md\n  done \n\n  echo '</details>' >> comment.md\ndone\n\n# for ss_test in tests/test_config/*.png logs/*.png; do \n#   ss_test_desc=$(basename \"$ss_test\" .png)\n\n#   # echo \"<details><summary>$ss_test_desc</summary>\" >> comment.md\n#   # echo '<p float=\"left\">' >> comment.md\n#   # cml-publish \"$ss_test\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n#   # # echo \"![](./$ss_test)\" >> comment.md\n#   # echo '</p></details>' >> comment.md\n\n#   echo \"\" >> comment.md\n#   echo \"### $ss_test_desc\" >> comment.md\n#   echo \"\" >> comment.md\n#   echo '<p float=\"left\">' >> comment.md\n#   cml-publish \"$ss_test\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n#   # echo \"![](./$ss_test)\" >> comment.md\n#   echo '</p>' >> comment.md\n# done\n\n# if [ \"$EVENT\" == 'pull_request' ]\n# then\nsha=${{ github.event.client_payload.pull_request.head.sha }}\n# elif [ \"$EVENT\" == 'workflow_run' ]\n# then\n#   sha=${{ github.event.workflow_run.head_sha}}\n# else\n#   sha=$GITHUB_SHA\n# fi\n\necho \"\" >> comment.md\necho \"###### For commit $sha\" >> comment.md\n"
       - name: Publish Screehnshots - Update or Create Comment
         if: always()
         uses: peter-evans/create-or-update-comment@v4
@@ -380,7 +217,6 @@ jobs:
           body-file: comment.md
           edit-mode: replace
           issue-number: ${{ github.event.client_payload.pull_request.number }}
-
       - name: Upload build artifacts
         if: always()
         uses: actions/upload-artifact@v3
@@ -392,7 +228,6 @@ jobs:
             tests/test_config/logs/*
             tests/test_config/*.png
             # tests/test_config/.xsession-errors
-
       - name: Upload build artifacts for failed builds
         if: failure()
         uses: actions/upload-artifact@v3
@@ -401,27 +236,26 @@ jobs:
           path: |
             tests/test_config
             tests/test_vault
-    
-  # MapjobStatus:
-  #   needs: [Test]
-  #   runs-on: ubuntu-latest
-  #   if: |
-  #     github.event_name == 'repository_dispatch' &&
-  #     github.event.client_payload.slash_command.args.named.sha != '' &&
-  #     contains(
-  #       github.event.client_payload.pull_request.head.sha,
-  #       github.event.client_payload.slash_command.args.named.sha
-  #     )
-    
-  #   steps:
+          # MapjobStatus:
+          #   needs: [Test]
+          #   runs-on: ubuntu-latest
+          #   if: |
+          #     github.event_name == 'repository_dispatch' &&
+          #     github.event.client_payload.slash_command.args.named.sha != '' &&
+          #     contains(
+          #       github.event.client_payload.pull_request.head.sha,
+          #       github.event.client_payload.slash_command.args.named.sha
+          #     )
       - uses: actions/github-script@v7
+        #   steps:
+
         id: update-check-run
         if: ${{ always() }}
         env:
           number: ${{ github.event.client_payload.pull_request.number }}
           job: ${{ github.job }}
           # Conveniently, job.status maps to https://developer.github.com/v3/checks/runs/#update-a-check-run
-          conclusion: ${{ job.status }} 
+          conclusion: ${{ job.status }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -444,4 +278,3 @@ jobs:
               });
               return result;
             }
-
