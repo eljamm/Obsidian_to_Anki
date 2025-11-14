@@ -9,11 +9,14 @@
     git-hooks.flake = false;
   };
 
+  # construct flake from ./default.nix
   outputs =
     { self, ... }@inputs:
     let
-      default = import ./. { inherit self inputs; };
-      mkSystemFlake = system: (import ./. { inherit self inputs system; }).flake.perSystem;
+      importFlake = arg: (system: (import ./. { inherit self inputs system; }).flake.${arg} or { });
+      inherit (inputs.flake-utils.lib) eachDefaultSystem eachDefaultSystemPassThrough;
+      systemAgnosticFlake = eachDefaultSystemPassThrough (importFlake "systemAgnostic");
+      perSystemFlake = eachDefaultSystem (importFlake "perSystem");
     in
-    (inputs.flake-utils.lib.eachDefaultSystem mkSystemFlake) // default.flake.system-agnostic;
+    systemAgnosticFlake // perSystemFlake;
 }

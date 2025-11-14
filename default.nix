@@ -41,18 +41,18 @@ let
 
       overlays.default = final: prev: devPkgs;
 
-      flake.system-agnostic = {
-        inherit overlays;
-      };
       flake.perSystem = {
         devShells = devShells;
-        formatter = format.formatter;
+        formatter = formatter.package;
         packages = devPkgs;
         checks = lib.filterAttrs (_: v: !v.meta.broken or false) flake.perSystem.packages;
         legacyPackages = {
           lib = devLib;
           packages = devPkgs;
         };
+      };
+      flake.systemAgnostic = {
+        inherit overlays;
       };
     }
   );
