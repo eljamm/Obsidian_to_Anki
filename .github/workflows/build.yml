@@ -6,6 +6,7 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+permissions: {}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,6 +16,8 @@ jobs:
         install-exact: [1, 0]
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
