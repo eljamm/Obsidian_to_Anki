@@ -24,16 +24,17 @@ let
       devLib = callPackage ./nix/lib.nix { };
 
       formatter = callPackage ./nix/formatter.nix { };
-      # devPkgs = lib.filterAttrs (n: v: lib.isDerivation v) (callPackage ./nix/packages.nix { });
       devPkgs = { };
+
       devShells.default = pkgs.mkShellNoCC {
         packages = with pkgs; [
-          self'.formatter.package
           nodejs
-          anki
+          pinact
+          self'.formatter.package
           (python3.withPackages (
             ps: with ps; [
               pytest
+              anki
             ]
           ))
         ];

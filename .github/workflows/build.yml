@@ -14,9 +14,9 @@ jobs:
         node-version: [18.x]
         install-exact: [1, 0]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
       # obsidian package often fails integrity checks since its a tarball, hence will get the get the tarball -> npm will cache it -> npm ci will test integrity of that cache vs package-lock.json
@@ -40,7 +40,7 @@ jobs:
           cp main.js manifest.json styles.css README.md ${{ env.PLUGIN_NAME }}
           zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ env.PLUGIN_NAME }}
           path: |-
