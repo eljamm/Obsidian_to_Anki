@@ -15,8 +15,8 @@ const DISPLAY_CODE_REPLACE:string = "OBSTOANKICODEDISPLAY"
 
 const CLOZE_REGEXP:RegExp = /(?:(?<!{){(?:c?(\d+)[:|])?(?!{))((?:[^\n][\n]?)+?)(?:(?<!})}(?!}))/g
 
-const IMAGE_EXTS: string[] = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg", ".tiff"]
-const AUDIO_EXTS: string[] = [".wav", ".m4a", ".flac", ".mp3", ".wma", ".aac", ".webm"]
+const IMAGE_EXTS: string[] = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp", ".svg", ".tiff"]
+const AUDIO_EXTS: string[] = [".wav", ".m4a", ".flac", ".ogg", ".mp3", ".wma", ".aac", ".webm"]
 
 const PARA_OPEN:string = "<p>"
 const PARA_CLOSE:string = "</p>"
