@@ -281,3 +281,8 @@ tests/test_config/*
 tests/test_vault/*
 tests/specs_gen/*
 tests/test_outputs/*
+
+## Nix
+result*
+# auto-generated from treefmt-nix for better compat with IDEs
+treefmt.toml

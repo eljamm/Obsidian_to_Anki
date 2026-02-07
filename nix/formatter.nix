@@ -8,7 +8,7 @@ lib.makeExtensible (self: {
   treefmt = import inputs.treefmt-nix;
 
   config = {
-    projectRootFile = "default.nix";
+    projectRootFile = ".git/config";
     programs.nixfmt.enable = true;
     programs.actionlint.enable = true;
     programs.zizmor.enable = true;
@@ -17,6 +17,7 @@ lib.makeExtensible (self: {
 
   # evaluated config
   eval = self.treefmt.evalModule pkgs self.config;
+  configFile = self.eval.config.build.configFile;
 
   # treefmt package
   package = self.eval.config.build.wrapper;

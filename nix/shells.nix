@@ -15,6 +15,13 @@
       ))
       nodejs
       pinact
+      gitMinimal
     ];
+    shellHook = ''
+      PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+
+      # better compat with IDEs
+      ln -sf "${formatter.configFile}" "$PROJECT_ROOT/treefmt.toml"
+    '';
   };
 }
