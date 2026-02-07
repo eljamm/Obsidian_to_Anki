@@ -13,6 +13,8 @@ lib.makeExtensible (self: {
     programs.actionlint.enable = true;
     programs.zizmor.enable = true;
     programs.yamlfmt.enable = true;
+    programs.prettier.enable = true;
+    programs.prettier.settings.editorconfig = true;
     programs.beautysh = {
       enable = true;
       indent_size = 4;

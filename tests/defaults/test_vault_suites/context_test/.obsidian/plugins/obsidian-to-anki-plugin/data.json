@@ -45,26 +45,10 @@
   "Added Media": [],
   "File Hashes": {},
   "fields_dict": {
-    "Basic": [
-      "Front",
-      "Back"
-    ],
-    "Basic (and reversed card)": [
-      "Front",
-      "Back"
-    ],
-    "Basic (optional reversed card)": [
-      "Front",
-      "Back",
-      "Add Reverse"
-    ],
-    "Basic (type in the answer)": [
-      "Front",
-      "Back"
-    ],
-    "Cloze": [
-      "Text",
-      "Back Extra"
-    ]
+    "Basic": ["Front", "Back"],
+    "Basic (and reversed card)": ["Front", "Back"],
+    "Basic (optional reversed card)": ["Front", "Back", "Add Reverse"],
+    "Basic (type in the answer)": ["Front", "Back"],
+    "Cloze": ["Text", "Back Extra"]
   }
 }

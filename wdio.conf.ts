@@ -1,21 +1,21 @@
-import type { Options } from '@wdio/types'
-const fs = require('fs')
-const fse = require('fs-extra');
-const path = require('path');
+import type { Options } from "@wdio/types";
+const fs = require("fs");
+const fse = require("fs-extra");
+const path = require("path");
 
-export const config/* : Options.Testrunner */ = {
+export const config /* : Options.Testrunner */ = {
     //
     // ====================
     // Runner Configuration
     // ====================
     // WebdriverIO supports running e2e tests as well as unit and component tests.
-    runner: 'local',
+    runner: "local",
     autoCompileOpts: {
         tsNodeOpts: {
-            project: './tests/tsconfig.json'
-        }
+            project: "./tests/tsconfig.json",
+        },
     },
-        
+
     //
     // ==================
     // Specify Test Files
@@ -34,9 +34,9 @@ export const config/* : Options.Testrunner */ = {
     //
     specs: [
         // [
-            // './tests/specs_gen/**/*.ts',
-            './tests/specs_gen/**/*.ts',
-            './tests/specs/**/*.ts'
+        // './tests/specs_gen/**/*.ts',
+        "./tests/specs_gen/**/*.ts",
+        "./tests/specs/**/*.ts",
         // ]
     ],
     // Patterns to exclude.
@@ -65,44 +65,46 @@ export const config/* : Options.Testrunner */ = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://saucelabs.com/platform/platform-configurator
     //
-    capabilities: [{
-    
-        // maxInstances can get overwritten per capability. So if you have an in-house Selenium
-        // grid with only 5 firefox instances available you can make sure that not more than
-        // 5 instances get started at a time.
-        // maxInstances: 5,
-        //
-        browserName: 'chrome',
-        acceptInsecureCerts: true,
-        // 'goog:chromeOptions': {
-        //     args: [
-        //         '--no-sandbox',
-        //         '--disable-infobars',
-        //         '--headless',
-        //         '--disable-gpu',
-        //         '--window-size=1440,735'
-        //     ],
-        // }
-        'goog:chromeOptions': {
-            // binary: '/squashfs-root/obsidian', // Path to your Electron binary
-            args: [
-                '--no-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-gpu',
-                '--disable-software-rasterizer',
-                '--window-size=1440,735'
-            ],
-            debuggerAddress: '127.0.0.1:8888'
-            // args: [/* cli arguments */] // Optional, perhaps 'app=' + /path/to/your/app/
+    capabilities: [
+        {
+            // maxInstances can get overwritten per capability. So if you have an in-house Selenium
+            // grid with only 5 firefox instances available you can make sure that not more than
+            // 5 instances get started at a time.
+            // maxInstances: 5,
+            //
+            browserName: "chrome",
+            acceptInsecureCerts: true,
+            // 'goog:chromeOptions': {
+            //     args: [
+            //         '--no-sandbox',
+            //         '--disable-infobars',
+            //         '--headless',
+            //         '--disable-gpu',
+            //         '--window-size=1440,735'
+            //     ],
+            // }
+            "goog:chromeOptions": {
+                // binary: '/squashfs-root/obsidian', // Path to your Electron binary
+                args: [
+                    "--no-sandbox",
+                    "--disable-dev-shm-usage",
+                    "--disable-gpu",
+                    "--disable-software-rasterizer",
+                    "--window-size=1440,735",
+                ],
+                debuggerAddress: "127.0.0.1:8888",
+                // args: [/* cli arguments */] // Optional, perhaps 'app=' + /path/to/your/app/
+            },
+            "goog:loggingPrefs": {
+                // <-- Add this
+                browser: "ALL",
+            },
+            // If outputDir is provided WebdriverIO can capture driver session logs
+            // it is possible to configure which logTypes to include/exclude.
+            // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
+            // excludeDriverLogs: ['bugreport', 'server'],
         },
-        "goog:loggingPrefs": {   // <-- Add this
-          browser: "ALL",
-        },
-        // If outputDir is provided WebdriverIO can capture driver session logs
-        // it is possible to configure which logTypes to include/exclude.
-        // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
-        // excludeDriverLogs: ['bugreport', 'server'],
-    }],
+    ],
     //
     // ===================
     // Test Configurations
@@ -110,7 +112,7 @@ export const config/* : Options.Testrunner */ = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'debug',
+    logLevel: "debug",
     //
     // Set specific log levels per logger
     // loggers:
@@ -134,7 +136,7 @@ export const config/* : Options.Testrunner */ = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: 'http://localhost', //:8080',    
+    baseUrl: "http://localhost", //:8080',
     // path: '/wd/hub', // Required to work with wdio v6
     // port: 9515,
     //
@@ -153,30 +155,33 @@ export const config/* : Options.Testrunner */ = {
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
     // automationProtocol: 'devtools',
-    services: [ 
-        [ 'chromedriver', {
-            logFileName: 'wdio-chromedriver.log', // default
-            outputDir: 'logs', // overwrites the config.outputDir
-            args: ['--silent']            
-        }], 
-        'docker'
+    services: [
+        [
+            "chromedriver",
+            {
+                logFileName: "wdio-chromedriver.log", // default
+                outputDir: "logs", // overwrites the config.outputDir
+                args: ["--silent"],
+            },
+        ],
+        "docker",
     ],
 
-    dockerLogs: 'logs',
-    dockerOptions: {        
-        image: 'anki-obsidian',
-        healthCheck: 'http://localhost:8080',
+    dockerLogs: "logs",
+    dockerOptions: {
+        image: "anki-obsidian",
+        healthCheck: "http://localhost:8080",
         options: {
-            p: ['8080:8080', '8888:8888'],
+            p: ["8080:8080", "8888:8888"],
             // shmSize: '2g',
             d: true,
             // eg. cmd, docker run -e LANG=C.UTF-8 -e DISPLAY=$DISPLAY -e LC_ALL=C.UTF-8 -it -v D:\\\\Users\\Documents\\GitHub\\Obsidian_to_Anki\\tests\\test_vault:/vaults -v D:\\\\Users\\Documents\\GitHub\\Obsidian_to_Anki\\tests\\test_config:/config -p 8080:8080 debian-anki
-            e: ['LANG=C.UTF-8', 'DISPLAY=$DISPLAY', 'LC_ALL=C.UTF-8'], 
+            e: ["LANG=C.UTF-8", "DISPLAY=$DISPLAY", "LC_ALL=C.UTF-8"],
             v: [
-                `${ path.join(__dirname, '/tests/test_vault') }:/vaults`,
-                `${ path.join(__dirname, '/tests/test_config') }:/config`
-            ]
-        }        
+                `${path.join(__dirname, "/tests/test_vault")}:/vaults`,
+                `${path.join(__dirname, "/tests/test_config")}:/config`,
+            ],
+        },
     },
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -184,7 +189,7 @@ export const config/* : Options.Testrunner */ = {
     //
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'mocha',
+    framework: "mocha",
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
@@ -198,26 +203,30 @@ export const config/* : Options.Testrunner */ = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: [ 
-        [ 'junit', {
-            outputDir: 'logs/test-reports/',
-            outputFileFormat: function(options) { // optional
-                return `wdio.xml`
+    reporters: [
+        [
+            "junit",
+            {
+                outputDir: "logs/test-reports/",
+                outputFileFormat: function (options) {
+                    // optional
+                    return `wdio.xml`;
+                },
+                errorOptions: {
+                    error: "message",
+                    failure: "message",
+                    stacktrace: "stack",
+                },
             },
-            errorOptions: {
-                error: 'message',
-                failure: 'message',
-                stacktrace: 'stack'
-            }
-        }]
+        ],
     ],
-    outputDir: 'logs',
+    outputDir: "logs",
     //
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
     mochaOpts: {
-        ui: 'bdd',
-        timeout: 60000
+        ui: "bdd",
+        timeout: 60000,
     },
     //
     // =====
@@ -233,40 +242,56 @@ export const config/* : Options.Testrunner */ = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onPrepare: function (config, capabilities) {
-        let vault_suites_dir = 'tests/defaults/test_vault_suites';   
+        let vault_suites_dir = "tests/defaults/test_vault_suites";
 
-        (async ()=>{
+        (async () => {
             try {
-                fse.emptyDirSync('tests/specs_gen')
-                const files = await fs.promises.readdir( vault_suites_dir );
+                fse.emptyDirSync("tests/specs_gen");
+                const files = await fs.promises.readdir(vault_suites_dir);
 
                 // Loop them all with the new for...of
-                for( const file of files ) {                    
+                for (const file of files) {
                     // Get the full paths
-                    const fromPath = path.join( vault_suites_dir, file );
-        
+                    const fromPath = path.join(vault_suites_dir, file);
+
                     // Stat the file to see if we have a file or dir
-                    const stat = await fs.promises.stat( fromPath );
-                    
-                    if( stat.isDirectory() ) {
-                        if(file[0] == 'n' && file[1] == 'g' && file[2] == '_') {
+                    const stat = await fs.promises.stat(fromPath);
+
+                    if (stat.isDirectory()) {
+                        if (
+                            file[0] == "n" &&
+                            file[1] == "g" &&
+                            file[2] == "_"
+                        ) {
                             // No Auto Generation flag is set on folder
                             // Dont generate spec file
-                            console.log( `'%s' is a directory. But Skipping specs generation`, fromPath );
+                            console.log(
+                                `'%s' is a directory. But Skipping specs generation`,
+                                fromPath,
+                            );
                             continue;
                         }
-                        console.log( `'%s' is a directory. Making tests/specs/${file}.e2e.ts`, fromPath );
-                        fs.copyFile("tests/defaults/specs/template.e2e.ts", `tests/specs_gen/${file}.e2e.ts`, (err) => {
-                            if (err) {
-                              console.log(`Error on trying to make specs test file ${file}:`, err);
-                            }
-                        });
+                        console.log(
+                            `'%s' is a directory. Making tests/specs/${file}.e2e.ts`,
+                            fromPath,
+                        );
+                        fs.copyFile(
+                            "tests/defaults/specs/template.e2e.ts",
+                            `tests/specs_gen/${file}.e2e.ts`,
+                            (err) => {
+                                if (err) {
+                                    console.log(
+                                        `Error on trying to make specs test file ${file}:`,
+                                        err,
+                                    );
+                                }
+                            },
+                        );
                     }
                 } // End for...of
+            } catch (e) {
+                console.error("We've thrown! Whoops!", e);
             }
-            catch( e ) {
-                console.error( "We've thrown! Whoops!", e );
-            }        
         })(); // Wrap in parenthesis and call now
     },
     /**
@@ -280,18 +305,20 @@ export const config/* : Options.Testrunner */ = {
      */
     onWorkerStart: function (cid, caps, specs, args, execArgv) {
         // console.log('onWorkerStart : ' + specs);
-        specs.forEach(spec => {
-            let test_name = (path.basename(spec) as string).split('.')[0];
+        specs.forEach((spec) => {
+            let test_name = (path.basename(spec) as string).split(".")[0];
             try {
                 fs.mkdir(`logs/${test_name}`, { recursive: true }, (err) => {
                     if (err) {
-                        console.log(`Error on trying to make logs test folder ${test_name}:`, err);
+                        console.log(
+                            `Error on trying to make logs test folder ${test_name}:`,
+                            err,
+                        );
                     }
                 });
+            } catch (e) {
+                console.error("We've thrown! Whoops!", e);
             }
-            catch( e ) {
-                console.error( "We've thrown! Whoops!", e );
-            }            
         });
     },
     /**
@@ -305,30 +332,41 @@ export const config/* : Options.Testrunner */ = {
         // TODO: Maybe we can do the last spec file's test delay here ?
         (async () => {
             try {
-                let test_outputs_dir = 'tests/test_config/.local/share/test_outputs';                
-                const files = await fs.promises.readdir( test_outputs_dir );
+                let test_outputs_dir =
+                    "tests/test_config/.local/share/test_outputs";
+                const files = await fs.promises.readdir(test_outputs_dir);
 
                 // Loop them all with the new for...of
-                for( const file of files ) {
+                for (const file of files) {
                     // Get the full paths
-                    const fromPath = path.join( test_outputs_dir, file );
-        
+                    const fromPath = path.join(test_outputs_dir, file);
+
                     // Stat the file to see if we have a file or dir
-                    const stat = await fs.promises.stat( fromPath );
-        
-                    if( stat.isDirectory() ) {
-                        console.log( `'%s' is a test_output directory. Moving for further python tests`, fromPath );
-                        fse.move(fromPath, `tests/test_outputs/${file}`, { overwrite: true }, err => {
-                            if (err) {
-                                console.log(`Error on trying to copying test_output of ${file}:`, err);
-                            }
-                        })
+                    const stat = await fs.promises.stat(fromPath);
+
+                    if (stat.isDirectory()) {
+                        console.log(
+                            `'%s' is a test_output directory. Moving for further python tests`,
+                            fromPath,
+                        );
+                        fse.move(
+                            fromPath,
+                            `tests/test_outputs/${file}`,
+                            { overwrite: true },
+                            (err) => {
+                                if (err) {
+                                    console.log(
+                                        `Error on trying to copying test_output of ${file}:`,
+                                        err,
+                                    );
+                                }
+                            },
+                        );
                     }
                 } // End for...of
+            } catch (e) {
+                console.error("We've thrown! Whoops!", e);
             }
-            catch( e ) {
-                console.error( "We've thrown! Whoops!", e );
-            }  
         })(); // Wrap in parenthesis and call now
     },
     /**
@@ -393,7 +431,6 @@ export const config/* : Options.Testrunner */ = {
     // afterTest: function(test, context, { error, result, duration, passed, retries }) {
     // },
 
-
     /**
      * Hook that gets executed after the suite has ended
      * @param {Object} suite suite details
@@ -437,10 +474,10 @@ export const config/* : Options.Testrunner */ = {
     // onComplete: function(exitCode, config, capabilities, results) {
     // },
     /**
-    * Gets executed when a refresh happens.
-    * @param {String} oldSessionId session ID of the old session
-    * @param {String} newSessionId session ID of the new session
-    */
+     * Gets executed when a refresh happens.
+     * @param {String} oldSessionId session ID of the old session
+     * @param {String} newSessionId session ID of the new session
+     */
     // onReload: function(oldSessionId, newSessionId) {
     // }
-}
+};

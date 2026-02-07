@@ -1,10 +1,7 @@
 {
   "app:reload": [
     {
-      "modifiers": [
-        "Mod",
-        "Shift"
-      ],
+      "modifiers": ["Mod", "Shift"],
       "key": "R"
     }
   ]
