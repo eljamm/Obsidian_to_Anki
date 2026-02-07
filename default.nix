@@ -31,6 +31,7 @@ let
     shells = def.callPackage ./nix/shells.nix { };
     devAnki = def.callPackage ./nix/anki.nix { };
     devObsidian = def.callPackage ./nix/obsidian.nix { };
+    test = def.callPackage ./nix/test { };
 
     flake = def.callPackage ./nix/flake.nix { };
   });

@@ -283,6 +283,8 @@ tests/specs_gen/*
 tests/test_outputs/*
 
 ## Nix
+*.qcow2
+.nixos-test-history
 result*
 # auto-generated from treefmt-nix for better compat with IDEs
 treefmt.toml
