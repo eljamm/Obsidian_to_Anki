@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir ${{ env.PLUGIN_NAME }}
           cp main.js manifest.json styles.css README.md ${{ env.PLUGIN_NAME }}
-          zip -r ${{ env.PLUGIN_NAME }}-${{ env.tag }}.zip ${{ env.PLUGIN_NAME }}
+          zip -r ${{ env.PLUGIN_NAME }}-${TAG}.zip ${{ env.PLUGIN_NAME }}
       - name: Release
         uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
         with:
