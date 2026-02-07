@@ -167,6 +167,8 @@ export class FormatConverter {
 		note_text = this.decensor(note_text, INLINE_CODE_REPLACE, inline_code_matches, false)
 		note_text = converter.makeHtml(note_text)
 		note_text = this.decensor(note_text, MATH_REPLACE, math_matches, true).trim()
+		// Add class to inline code elements
+		note_text = note_text.replace(/<code>/g, '<code class="inline-code">')
 		// Remove unnecessary paragraph tag
 		if (note_text.startsWith(PARA_OPEN) && note_text.endsWith(PARA_CLOSE)) {
 			note_text = note_text.slice(PARA_OPEN.length, -1 * PARA_CLOSE.length)

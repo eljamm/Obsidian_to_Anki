@@ -360,6 +360,8 @@ class FormatConverter:
     def markdown_parse(text):
         """Apply markdown conversions to text."""
         text = md_parser.reset().convert(text)
+        # Add class to inline code elements
+        text = text.replace('<code>', '<code class="inline-code">')
         return text
 
     @staticmethod
