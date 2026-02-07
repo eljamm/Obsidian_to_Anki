@@ -88,9 +88,14 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT: ${{ github.event_name }}
           REF: ${{ github.ref }}
-          GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha}}
+          GITHUB_SHA: ${{ github.sha }}
+          PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
         shell: bash
-        run: "echo \"# 📷 Screenshots of tests:\" >> comment.md\necho \"\" >> comment.md\n\nfor ss_test in logs/**/; do \n  ss_test_desc=$(basename \"$ss_test\" .png)\n  \n  if [ \"$ss_test_desc\" == \"test-reports\" ]; then\n    continue\n  fi\n\n  echo \"\" >> comment.md\n  echo \"### 🔧 $ss_test_desc\" >> comment.md\n  echo \"$ss_test - $ss_test_desc\"\n  echo \"\" >> comment.md\n\n  # echo '<details><summary>Pre Test</summary>' >> comment.md\n  echo '#### Pre Test' >> comment.md\n\n  for ss in \"$ss_test\"*Pre*.png; do \n    echo '<p float=\"left\">' >> comment.md\n    echo \"  $ss\"\n    cml-publish \"$ss\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n    echo '</p>' >> comment.md\n  done \n  \n  echo \"\" >> comment.md\n  # echo '</details><details><summary>Post Test</summary>' >> comment.md\n  echo '#### Post Test' >> comment.md\n\n  for ss in \"$ss_test\"*Post*.png; do \n    echo '<p float=\"left\">' >> comment.md\n    echo \"  $ss\"\n    cml-publish \"$ss\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n    echo '</p>' >> comment.md\n  done \n\n  # echo '</details>' >> comment.md\n  echo \"\" >> comment.md\ndone\n\n# for ss_test in tests/test_config/*.png logs/*.png; do \n#   ss_test_desc=$(basename \"$ss_test\" .png)\n\n#   # echo \"<details><summary>$ss_test_desc</summary>\" >> comment.md\n#   # echo '<p float=\"left\">' >> comment.md\n#   # cml-publish \"$ss_test\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n#   # # echo \"![](./$ss_test)\" >> comment.md\n#   # echo '</p></details>' >> comment.md\n\n#   echo \"\" >> comment.md\n#   echo \"### $ss_test_desc\" >> comment.md\n#   echo \"\" >> comment.md\n#   echo '<p float=\"left\">' >> comment.md\n#   cml-publish \"$ss_test\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n#   # echo \"![](./$ss_test)\" >> comment.md\n#   echo '</p>' >> comment.md\n# done\n\nif [ \"$EVENT\" == 'pull_request' ]\nthen\n  sha=${{ github.event.pull_request.head.sha}}\nelif [ \"$EVENT\" == 'workflow_run' ]\nthen\n  sha=${GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA}\nelse\n  sha=$GITHUB_SHA\nfi\n\necho \"\" >> comment.md\necho \"###### For commit $sha\" >> comment.md\n"
+        run: |
+          bash << 'EOF'
+          . templates/screenshot.sh
+          EOF
       - name: Publish Screehnshots - Update or Create Comment
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && always()
         uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
@@ -213,10 +218,14 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT: ${{ github.event_name }}
           REF: ${{ github.ref }}
-          GITHUB_EVENT_CLIENT_PAYLOAD_PULL_REQUEST_HEAD_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
-          GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha}}
+          GITHUB_SHA: ${{ github.sha }}
+          PULL_REQUEST_HEAD_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
+          WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
         shell: bash
-        run: "echo \"# 📷 Screenshots of tests:\" >> comment.md\necho \"\" >> comment.md\n\nfor ss_test in logs/**/; do \n  ss_test_desc=$(basename \"$ss_test\" .png)\n  \n  if [ \"$ss_test_desc\" == \"test-reports\" ]; then\n    continue\n  fi\n\n  echo \"\" >> comment.md\n  echo \"### 🔧 $ss_test_desc\" >> comment.md\n  echo \"\" >> comment.md\n\n  echo '<details><summary>Pre Test</summary>' >> comment.md\n\n  for ss in \"$ss_test\"*Pre*.png; do \n    echo '<p float=\"left\">' >> comment.md\n    cml-publish \"$ss\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n    echo '</p>' >> comment.md\n  done \n  \n  echo '</details><details><summary>Post Test</summary>' >> comment.md\n\n  for ss in \"$ss_test\"*Post*.png; do \n    echo '<p float=\"left\">' >> comment.md\n    cml-publish \"$ss\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n    echo '</p>' >> comment.md\n  done \n\n  echo '</details>' >> comment.md\ndone\n\n# for ss_test in tests/test_config/*.png logs/*.png; do \n#   ss_test_desc=$(basename \"$ss_test\" .png)\n\n#   # echo \"<details><summary>$ss_test_desc</summary>\" >> comment.md\n#   # echo '<p float=\"left\">' >> comment.md\n#   # cml-publish \"$ss_test\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n#   # # echo \"![](./$ss_test)\" >> comment.md\n#   # echo '</p></details>' >> comment.md\n\n#   echo \"\" >> comment.md\n#   echo \"### $ss_test_desc\" >> comment.md\n#   echo \"\" >> comment.md\n#   echo '<p float=\"left\">' >> comment.md\n#   cml-publish \"$ss_test\" | sed -E 's/.+/<img width=\"90%\" src=\"\\0\"\\/>/' >> comment.md\n#   # echo \"![](./$ss_test)\" >> comment.md\n#   echo '</p>' >> comment.md\n# done\n\n# if [ \"$EVENT\" == 'pull_request' ]\n# then\nsha=${GITHUB_EVENT_CLIENT_PAYLOAD_PULL_REQUEST_HEAD_SHA}\n# elif [ \"$EVENT\" == 'workflow_run' ]\n# then\n#   sha=${GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA}\n# else\n#   sha=$GITHUB_SHA\n# fi\n\necho \"\" >> comment.md\necho \"###### For commit $sha\" >> comment.md\n"
+        run: |
+          bash << 'EOF'
+          . templates/screenshot.sh
+          EOF
       - name: Publish Screehnshots - Update or Create Comment
         if: always()
         uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
