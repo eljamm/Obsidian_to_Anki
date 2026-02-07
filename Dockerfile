@@ -16,7 +16,7 @@ RUN \
         # Install Chrome dependencies.
         dbus-x11 \
         uuid-runtime \
-        locales locales-all \ 
+        locales locales-all \
         dbus-x11 x11-xkb-utils rename
 
 # Credits: https://wiki.debian.org/Locale
@@ -61,14 +61,14 @@ RUN echo "**** download anki ****" && curl https://github.com/ankitects/anki/rel
 RUN chmod +x ./anki.tar.zst && \
     mkdir anki && \
     mkdir /usr/share/desktop-directories && \
-    tar --use-compress-program=unzstd -xvf ./anki.tar.zst -C ./anki/ && \ 
-    cd anki/anki-2.1.60-linux-qt6/ && \ 
+    tar --use-compress-program=unzstd -xvf ./anki.tar.zst -C ./anki/ && \
+    cd anki/anki-2.1.60-linux-qt6/ && \
     chmod +x ./install.sh && \
     ./install.sh
 
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8 
+ENV LANGUAGE en_US.UTF-8
 
 RUN update-locale LANG=en_US.UTF-8
 ENV QT_DEBUG_PLUGINS 1
