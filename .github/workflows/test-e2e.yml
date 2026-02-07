@@ -38,8 +38,8 @@ jobs:
         if: always()
         run: |
           echo "Current user for this action is - $USER $(id -u)"
-          sudo chown -R $(whoami) tests/test_config
-          sudo chown -R $(whoami) tests/test_vault
+          sudo chown -R "$(whoami)" tests/test_config
+          sudo chown -R "$(whoami)" tests/test_vault
 
           ls -alh
           ls -alh tests/test_config/
@@ -166,8 +166,8 @@ jobs:
         if: always()
         run: |
           echo "Current user for this action is - $USER $(id -u)"
-          sudo chown -R $(whoami) tests/test_config
-          sudo chown -R $(whoami) tests/test_vault
+          sudo chown -R "$(whoami)" tests/test_config
+          sudo chown -R "$(whoami)" tests/test_vault
 
           ls -alh
           ls -alh tests/test_config/
