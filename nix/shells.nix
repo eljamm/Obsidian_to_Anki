@@ -1,26 +1,29 @@
 {
   pkgs,
   formatter,
-  scripts,
+  devAnki,
   ...
 }:
+let
+  customPython = pkgs.python3.withPackages (
+    ps: with ps; [
+      pytest
+    ]
+  );
+in
 {
   default = pkgs.mkShellNoCC {
     inputsFrom = [ formatter.shell ];
     packages = with pkgs; [
-      (python3.withPackages (
-        ps: with ps; [
-          pytest
-          anki
-        ]
-      ))
+      customPython
+      devAnki.wrapper
       gitMinimal
       nodejs
       pinact
-      scripts.anki
     ];
     shellHook = ''
       export PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+      export PYTHONPATH="$PYTHONPATH:${devAnki.pythonPath}"
 
       # better compat with IDEs
       ln -sf "${formatter.configFile}" "$PROJECT_ROOT/treefmt.toml"

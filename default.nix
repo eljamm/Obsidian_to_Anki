@@ -27,7 +27,7 @@ let
     devLib = def.callPackage ./nix/lib.nix { };
     formatter = def.callPackage ./nix/formatter.nix { };
     shells = def.callPackage ./nix/shells.nix { };
-    scripts = def.callPackage ./nix/scripts.nix { };
+    devAnki = def.callPackage ./nix/anki.nix { };
 
     flake = def.callPackage ./nix/flake.nix { };
   });
