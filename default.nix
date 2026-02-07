@@ -1,5 +1,9 @@
 {
-  self ? import ./nix/utils/import-flake.nix { src = ./.; },
+  flake-inputs ? import (fetchTarball {
+    url = "https://github.com/fricklerhandwerk/flake-inputs/tarball/4.1.0";
+    sha256 = "1j57avx2mqjnhrsgq3xl7ih8v7bdhz1kj3min6364f486ys048bm";
+  }),
+  self ? flake-inputs.import-flake { src = ./.; },
   inputs ? self.inputs,
   system ? builtins.currentSystem,
   pkgs ? import inputs.nixpkgs {
@@ -10,52 +14,21 @@
   lib ? import "${inputs.nixpkgs}/lib",
 }:
 let
-  scope = lib.makeScope pkgs.newScope (
-    self': with self'; {
-      inherit
-        lib
-        pkgs
-        self
-        system
-        inputs
-        ;
+  default = lib.makeScope pkgs.newScope (def: {
+    inherit
+      lib
+      pkgs
+      self
+      system
+      inputs
+      default # recurse scope
+      ;
 
-      # Custom library. Contains helper functions, builders, ...
-      devLib = callPackage ./nix/lib.nix { };
+    devLib = def.callPackage ./nix/lib.nix { };
+    formatter = def.callPackage ./nix/formatter.nix { };
+    shells = def.callPackage ./nix/shells.nix { };
 
-      formatter = callPackage ./nix/formatter.nix { };
-      devPkgs = { };
-
-      devShells.default = pkgs.mkShellNoCC {
-        packages = with pkgs; [
-          nodejs
-          pinact
-          self'.formatter.package
-          (python3.withPackages (
-            ps: with ps; [
-              pytest
-              anki
-            ]
-          ))
-        ];
-      };
-
-      overlays.default = final: prev: devPkgs;
-
-      flake.perSystem = {
-        devShells = devShells;
-        formatter = formatter.package;
-        packages = devPkgs;
-        checks = lib.filterAttrs (_: v: !v.meta.broken or false) flake.perSystem.packages;
-        legacyPackages = {
-          lib = devLib;
-          packages = devPkgs;
-        };
-      };
-      flake.systemAgnostic = {
-        inherit overlays;
-      };
-    }
-  );
+    flake = def.callPackage ./nix/flake.nix { };
+  });
 in
-scope // scope.devPkgs
+default

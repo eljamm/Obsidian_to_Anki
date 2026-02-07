@@ -20,5 +20,4 @@ rec {
       type = "app";
       program = attrsToApp name value;
     }) apps;
-
 }

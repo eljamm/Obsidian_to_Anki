@@ -5,18 +5,16 @@
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
-    git-hooks.url = "github:fricklerhandwerk/git-hooks";
-    git-hooks.flake = false;
   };
 
-  # construct flake from ./default.nix
   outputs =
     { self, ... }@inputs:
     let
-      importFlake = arg: (system: (import ./. { inherit self inputs system; }).flake.${arg} or { });
-      inherit (inputs.flake-utils.lib) eachDefaultSystem eachDefaultSystemPassThrough;
-      systemAgnosticFlake = eachDefaultSystemPassThrough (importFlake "systemAgnostic");
-      perSystemFlake = eachDefaultSystem (importFlake "perSystem");
+      importFlake = system: (import ./. { inherit self inputs system; }).flake or { };
+
+      inherit (inputs.flake-utils.lib)
+        eachDefaultSystem
+        ;
     in
-    systemAgnosticFlake // perSystemFlake;
+    eachDefaultSystem importFlake;
 }
