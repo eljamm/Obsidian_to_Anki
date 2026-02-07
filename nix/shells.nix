@@ -2,6 +2,7 @@
   pkgs,
   formatter,
   devAnki,
+  devObsidian,
   ...
 }:
 let
@@ -17,6 +18,7 @@ in
     packages = with pkgs; [
       customPython
       devAnki.wrapper
+      devObsidian.wrapper
       gitMinimal
       nodejs
       pinact

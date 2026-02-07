@@ -7,7 +7,9 @@
   inputs ? self.inputs,
   system ? builtins.currentSystem,
   pkgs ? import inputs.nixpkgs {
-    config = { };
+    config = {
+      allowUnfree = true; # obsidian
+    };
     overlays = [ ];
     inherit system;
   },
@@ -28,6 +30,7 @@ let
     formatter = def.callPackage ./nix/formatter.nix { };
     shells = def.callPackage ./nix/shells.nix { };
     devAnki = def.callPackage ./nix/anki.nix { };
+    devObsidian = def.callPackage ./nix/obsidian.nix { };
 
     flake = def.callPackage ./nix/flake.nix { };
   });
