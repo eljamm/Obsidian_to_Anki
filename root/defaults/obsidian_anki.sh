@@ -7,7 +7,7 @@ echo "abc" | sudo -S chown -R abc:abc /vaults
 testFound=false
 while [ ! testFound ]
 do
-    for f in /vaults/*/*.md; 
+    for f in /vaults/*/*.md;
     do
         [ -e "$f" ] && testFound=true || testFound=false
         ## Check if the glob gets expanded to existing files.
@@ -21,11 +21,11 @@ done
 
 sleep 1s
 
-/squashfs-root/obsidian --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer --remote-debugging-port=8890 --window-position=400,10 
+/squashfs-root/obsidian --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer --remote-debugging-port=8890 --window-position=400,10
 
 echo "Obsisidan Ended .... " >> /config/logs/obsidian.log 2>&1
 
-# ss_dir = 
+# ss_dir =
 for file in /vaults/**/*.md; do test_name=$(basename $file); done
 test_name=$(echo $test_name | awk -F [.] '{print $1}')
 
@@ -38,20 +38,20 @@ rename "s/Anki PreTest.png/Anki PreTest_${test_name}.png/" /config/*.png
 
 
 # echo "abc" | sudo -S chown -R 1000:1000 \
-#     /config \
-#     /vaults \
-#     /squashfs-root
+    #     /config \
+    #     /vaults \
+    #     /squashfs-root
 
 # echo "abc" | sudo -S chmod 775 -R 1000:1000 \
-#     /config \
-#     /vaults \
-#     /squashfs-root
+    #     /config \
+    #     /vaults \
+    #     /squashfs-root
 
 # ls -alh >> /config/logs/gnome.log
 # ls -alh /config/ >> /config/logs/gnome.log
 # ls -alh "/config/.local/share/Anki2/User 1/" >> /config/logs/gnome.log
 
-sleep 2s 
+sleep 2s
 
 pkill anki
 
@@ -66,7 +66,7 @@ echo "abc" | sudo -S mv -f /config/.local/share/Anki2 "/config/.local/share/test
 echo "abc" | sudo -S mkdir -p /config/.local/share/Anki2
 echo "abc" | sudo -S cp -Raf /config/.local/share/Anki2default/* /config/.local/share/Anki2
 
-# sleep 3s 
+# sleep 3s
 # Let wdio complete its post test checks or other checks with obsidian files
 while [ ! -f /vaults/unlock ]
 do
@@ -83,7 +83,7 @@ echo "abc" | sudo chown -R abc:abc /config
 testFound=false
 while [ ! testFound ]
 do
-    for f in /vaults/*/*.md; 
+    for f in /vaults/*/*.md;
     do
         [ -e "$f" ] && testFound=true || testFound=false
         ## Check if the glob gets expanded to existing files.
