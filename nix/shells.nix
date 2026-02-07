@@ -1,6 +1,7 @@
 {
   pkgs,
   formatter,
+  scripts,
   ...
 }:
 {
@@ -13,12 +14,13 @@
           anki
         ]
       ))
+      gitMinimal
       nodejs
       pinact
-      gitMinimal
+      scripts.anki
     ];
     shellHook = ''
-      PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+      export PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 
       # better compat with IDEs
       ln -sf "${formatter.configFile}" "$PROJECT_ROOT/treefmt.toml"

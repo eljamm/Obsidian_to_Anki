@@ -286,3 +286,6 @@ tests/test_outputs/*
 result*
 # auto-generated from treefmt-nix for better compat with IDEs
 treefmt.toml
+
+## Anki
+.anki
