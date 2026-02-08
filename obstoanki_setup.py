@@ -6,14 +6,14 @@ import os
 SCRIPT_URL = "".join(
     [
         "https://github.com/Pseudonium/Obsidian_to_Anki/releases/latest",
-        "/download/obsidian_to_anki.py"
+        "/download/obsidian_to_anki.py",
     ]
 )
 
 REQUIRE_URL = "".join(
     [
         "https://github.com/Pseudonium/Obsidian_to_Anki/releases/latest",
-        "/download/requirements.txt"
+        "/download/requirements.txt",
     ]
 )
 

@@ -19,6 +19,9 @@ lib.makeExtensible (self: {
       enable = true;
       indent_size = 4;
     };
+    # TODO:
+    # programs.ruff-check.enable = true;
+    programs.ruff-format.enable = true;
   };
 
   # evaluated config
